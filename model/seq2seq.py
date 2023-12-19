@@ -47,10 +47,10 @@ class Decoder(nn.Module):
 
     def forward(self, x, hidden, cell):
         x = x.unsqueeze(1)  # 添加一维
-        # x: [batch_size, 1] ??
+        # x: [batch_size, 1] 
 
         embedded = self.dropout(self.embedding(x))
-
+        # embedded: [batch_size, 1, emb_dim]
         output, (hidden, cell) = self.rnn(embedded, (hidden, cell))
 
         prediction = self.fc_out(output.squeeze(1))
