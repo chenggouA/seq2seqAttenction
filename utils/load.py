@@ -40,20 +40,20 @@ class Tokenizer:
 tokenizes = Tokenizer()
 
 
-def get_train_test():
+def get_train_test(scale = 1.0):
     if os.path.exists("data/data.npz"):
         loaded_data = np.load("data/data.npz")
         X_train = np.squeeze(loaded_data["X_train"])
         X_test = np.squeeze(loaded_data["X_test"])
         y_train = np.squeeze(loaded_data["y_train"])
         y_test = np.squeeze(loaded_data["y_test"])
-        return X_train, X_test, y_train, y_test
+        return X_train[0: int(len(X_train) * scale), ...], X_test[0: int(len(X_test) * scale), ...], y_train[0: int(len(y_train) * scale), ...], y_test[0: int(len(y_test) * scale), ...]
     else:
-        return new_get_train_test()
+        return new_get_train_test(scale)
 
 
 
-def new_get_train_test(input_max_len = 150, output_max_len = 350):
+def new_get_train_test(scale, input_max_len = 150, output_max_len = 150):
     filePath = "data/lawzhidao_filter.csv"
     df = pd.read_csv(filePath, encoding="utf-8")
     df_best = df[df['is_best'] == 1]
@@ -96,7 +96,8 @@ def new_get_train_test(input_max_len = 150, output_max_len = 350):
     np.savez('data/data.npz', X_train=np.array(X_train), X_test=np.array(X_test), y_train=np.array(y_train),
              y_test=np.array(y_test))
 
-    return X_train, X_test, y_train, y_test
+    # return X_train, X_test, y_train, y_test
+    X_train[0: len(X_train) * scale], X_test[0: len(X_test) * scale], y_train[0: len(y_train) * scale], y_test[0: len(y_test) * scale]
 
 
 if __name__ == "__main__":
